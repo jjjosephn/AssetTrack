@@ -60,6 +60,16 @@ public class SearchAssetController implements Initializable {
         categoryChoiceBox.getItems().addAll(categories);
         locationsFromCSV("storages.csv");
         locationChoiceBox.getItems().addAll(locations);
+
+        searchComboBox.setOnMouseClicked(event -> {
+            if (assets.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No assets to choose from.");
+                alert.showAndWait();
+            }
+        });
     }
 
     @FXML
@@ -86,6 +96,13 @@ public class SearchAssetController implements Initializable {
             String purchaseValue = "";
             String expiration = "";
 
+            if (asset == null || asset.isEmpty()){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No assets to search from.");
+                alert.showAndWait();
+            }
             while ((line = br.readLine()) != null){
                 String[] details = line.split(",");
                 if (details.length > 0 && details[0].equalsIgnoreCase(asset)) {
@@ -171,7 +188,7 @@ public class SearchAssetController implements Initializable {
         LocalDate warrantyExpiration = this.warrantyExpiration.getValue();
 
         if (newName.isEmpty() || category == null || location == null) {
-            showAlert("Error", "Required fields cannot be empty!");
+            showAlert("Error", "No edit to save!");
             return;
         }
 
