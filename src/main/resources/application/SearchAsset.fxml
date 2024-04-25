@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E4DFDA;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SearchAssetController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E4DFDA;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SearchAssetController">
    <children>
       <Label alignment="CENTER" prefHeight="88.0" prefWidth="596.0" text="Search Asset" textFill="#d4b483">
          <font>
@@ -24,7 +24,7 @@
                <children>
                  <ComboBox fx:id="searchComboBox" editable="true" prefWidth="150.0" promptText="Search asset">
                   </ComboBox>
-                  <Button onAction="#setDetails" mnemonicParsing="false" text="Search" />
+                  <Button mnemonicParsing="false" onAction="#setDetails" text="Search" />
                </children>
                <padding>	
                   <Insets top="10.0" />
@@ -104,8 +104,8 @@
             </HBox>
             <HBox prefHeight="80.0" prefWidth="580.0" spacing="20.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="91.0" style="-fx-background-color: #d4b483;" text="Save Edit" />
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="92.0" style="-fx-background-color: #d4b483;" text="Delete" />
+                  <Button mnemonicParsing="false" onAction="#saveEdit" prefHeight="27.0" prefWidth="91.0" style="-fx-background-color: #d4b483;" text="Save Edit" />
+                  <Button mnemonicParsing="false" onAction="#deleteAsset" prefHeight="27.0" prefWidth="92.0" style="-fx-background-color: #d4b483;" text="Delete" />
                   <Button mnemonicParsing="false" onAction="#showHomePage" prefHeight="27.0" prefWidth="92.0" style="-fx-background-color: #d4b483;" text="Home" />
                </children>
                <padding>

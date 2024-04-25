@@ -54,11 +54,31 @@ public class DefineNewAssetController implements Initializable {
         categoryChoiceBox.getItems().addAll(categories);
         locationsFromCSV("storages.csv");
         locationChoiceBox.getItems().addAll(locations);
+
+        categoryChoiceBox.setOnMouseClicked(event -> {
+            if (categories.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No categories to choose from.");
+                alert.showAndWait();
+            }
+        });
+
+        locationChoiceBox.setOnMouseClicked(event -> {
+            if (locations.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No locations to choose from.");
+                alert.showAndWait();
+            }
+        });
     }
 
     private void categoriesFromCSV(String filePath) {
+        String line;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
             while ((line = br.readLine()) != null) {
                 categories.add(line.trim());
             }
