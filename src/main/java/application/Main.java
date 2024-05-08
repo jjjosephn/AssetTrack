@@ -2,19 +2,36 @@ package application;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class Main extends Application {
+
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws Exception {
         try {
-            VBox root = (VBox) FXMLLoader.load(getClass().getResource("Main.fxml"));
-            Scene scene = new Scene(root, 400, 400);
-            primaryStage.setScene(scene);
+            Parent root;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ExpiredWarranties.fxml"));
+            root = loader.load();
+
+            ExpiredWarrantiesController expiredWarrantiesController = loader.getController();
+            if (expiredWarrantiesController.hasExpiredWarranties() == true) {
+                expiredWarrantiesController.showExpiredWarrantiesAlert();
+            } else {
+                showMain(primaryStage);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showMain(Stage primaryStage) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+            primaryStage.setScene(new Scene(root));
+            primaryStage.setTitle("Home");
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -22,6 +39,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }

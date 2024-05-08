@@ -25,7 +25,7 @@ public class DefineNewCategoryController {
         try {
             // Load the new page FXML file
             root = FXMLLoader.load(getClass().getResource("Main.fxml"));
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root);
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setTitle("Home");
             stage.setScene(scene);

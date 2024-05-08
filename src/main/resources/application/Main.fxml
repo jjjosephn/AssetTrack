@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #E4DFDA;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+<VBox prefHeight="456.0" prefWidth="600.0" style="-fx-background-color: #E4DFDA;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <children>
       <Label alignment="CENTER" prefHeight="101.0" prefWidth="600.0" text="Home Page" textFill="#d4b483">
          <font>
@@ -24,6 +24,7 @@
                <Button mnemonicParsing="false" onAction="#showDefineNewStoragePage" prefHeight="54.0" prefWidth="156.0" style="-fx-background-color: #d4b483;" text="Define new storage" />
                <Button mnemonicParsing="false" onAction="#showDefineNewAssetPage" prefHeight="54.0" prefWidth="156.0" style="-fx-background-color: #d4b483;" text="Define New Asset" />
                <Button mnemonicParsing="false" onAction="#showSearchAssetPage" prefHeight="54.0" prefWidth="156.0" style="-fx-background-color: #d4b483;" text="Search Asset" />
+               <Button mnemonicParsing="false" onAction="#showExpiredWarrantiesPage" prefHeight="54.0" prefWidth="156.0" style="-fx-background-color: #d4b483;" text="Expired Warranties" />
             </VBox>         </bottom>
       </BorderPane>
    </children>

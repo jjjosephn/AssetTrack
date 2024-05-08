@@ -74,6 +74,21 @@ public class MainController {
 			e.printStackTrace();
 		}
 	}
+
+	@FXML
+	public void showExpiredWarrantiesPage(ActionEvent event) {
+		try {
+			// Load the new page FXML file
+			root = FXMLLoader.load(getClass().getResource("ExpiredWarranties.fxml"));
+			Scene scene = new Scene(root);
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			stage.setTitle("Search Asset");
+			stage.setScene(scene);
+			stage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 		
 
 }

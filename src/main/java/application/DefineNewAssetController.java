@@ -37,7 +37,7 @@ public class DefineNewAssetController implements Initializable {
     @FXML
     private DatePicker warrantyExpiration;
     @FXML
-    private TextField description;
+    private TextArea description;
     @FXML
     private List<String> categories = new ArrayList<>();
     @FXML
@@ -103,13 +103,12 @@ public class DefineNewAssetController implements Initializable {
     private void handleSaveButtonClick() {
         // Check if required fields are empty
         if (assetName.getText().trim().isEmpty() || categoryChoiceBox.getValue() == null || locationChoiceBox.getValue() == null) {
-        	Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("Please enter all required fields.");
             alert.showAndWait();
-        } else if (!isValid(purchaseDate.getValue().toString())) {
-            System.out.println(purchaseDate.getValue().toString());
+        } else if (purchaseDate.getValue() != null && !isValid(purchaseDate.getValue().toString()) || warrantyExpiration.getValue() != null && !isValid(warrantyExpiration.getValue().toString())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
@@ -148,14 +147,15 @@ public class DefineNewAssetController implements Initializable {
                 successAlert.setHeaderText(null);
                 successAlert.setContentText("Asset info has been saved!");
                 successAlert.showAndWait();
-                    // Clear the input fields
+
+                // Clear the input fields
                 assetName.clear();
                 categoryChoiceBox.setValue(null);
                 locationChoiceBox.setValue(null);
-                   description.clear();
-                   purchasedValue.clear();
-                   purchaseDate.setValue(null);
-                   warrantyExpiration.setValue(null);
+                description.clear();
+                purchasedValue.clear();
+                purchaseDate.setValue(null);
+                warrantyExpiration.setValue(null);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -178,7 +178,7 @@ public class DefineNewAssetController implements Initializable {
         try {
             // Load the new page FXML file
             root = FXMLLoader.load(getClass().getResource("Main.fxml"));
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root);
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setTitle("Home");
             stage.setScene(scene);
