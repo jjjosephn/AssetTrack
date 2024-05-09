@@ -87,6 +87,13 @@ public class ExpiredWarrantiesController {
     }
 
     private void populateFields(String assetName) {
+        assetBox.clear();
+        categoryBox.clear();
+        locationBox.clear();
+        purchaseDateBox.clear();
+        purchaseValueBox.clear();
+        descriptionBox.clear();
+        warrantyExpirationDateBox.clear();
         String path = "assets.csv";
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {

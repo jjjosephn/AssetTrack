@@ -39,7 +39,7 @@ public class SearchAssetController implements Initializable {
     @FXML
     private DatePicker warrantyExpiration;
     @FXML
-    private TextField description;
+    private TextArea description;
     @FXML
     private List<String> categories = new ArrayList<>();
     @FXML
