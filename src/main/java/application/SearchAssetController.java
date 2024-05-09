@@ -18,20 +18,48 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class SearchAssetController implements Initializable {
+	
+	@FXML
+    private TableView<Asset> table;
+    @FXML
+    private TableColumn<Asset, String> assets_col;
+    @FXML
+    private TableColumn<Asset, String> cat_col;
+    @FXML
+    private TableColumn<Asset, String> loc_col;
+    @FXML
+    private TableColumn<Asset, String> des_col;
+    @FXML
+    private TableColumn<Asset, LocalDate> pDate_col;
+    @FXML
+    private TableColumn<Asset, String> pVal_col;
+    @FXML
+    private TableColumn<Asset, LocalDate> we_col;
+
+    private ObservableList<Asset> assetList = FXCollections.observableArrayList();
+
+    @FXML
+    private TextField searchAsset;
+    @FXML
+    private ChoiceBox<String> categorySearch;
+    @FXML
+    private ChoiceBox<String> locationSearch;
+
+
     @FXML
     private TextField assetName;
     @FXML
     private ChoiceBox<String> categoryChoiceBox;
     @FXML
     private ChoiceBox<String> locationChoiceBox;
-    @FXML
-    private ComboBox<String> searchComboBox;
     @FXML
     private DatePicker purchaseDate;
     @FXML
@@ -54,90 +82,112 @@ public class SearchAssetController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        loadAssetsFromCSV("assets.csv");
         assetNameFromCSV("assets.csv");
-        searchComboBox.getItems().addAll(assets);
         categoriesFromCSV("categories.csv");
         categoryChoiceBox.getItems().addAll(categories);
+        categorySearch.getItems().addAll(categories);
         locationsFromCSV("storages.csv");
         locationChoiceBox.getItems().addAll(locations);
+        locationSearch.getItems().addAll(locations);
 
-        searchComboBox.setOnMouseClicked(event -> {
-            if (assets.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("No assets to choose from.");
-                alert.showAndWait();
+        assets_col.setCellValueFactory(cellData -> cellData.getValue().assetNameProperty());
+        cat_col.setCellValueFactory(cellData -> cellData.getValue().categoryProperty());
+        loc_col.setCellValueFactory(cellData -> cellData.getValue().locationProperty());
+        des_col.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
+        pDate_col.setCellValueFactory(cellData -> cellData.getValue().purchaseDateProperty());
+        pVal_col.setCellValueFactory(cellData -> cellData.getValue().purchasedValueProperty());
+        we_col.setCellValueFactory(cellData -> cellData.getValue().warrantyExpirationProperty());
+
+        table.setItems(assetList);
+
+        table.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                setDetails(null);
             }
         });
+
+    }
+
+    private void loadAssetsFromCSV(String filePath) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                String[] details = line.split(",");
+                if (details.length >= 7) {
+                    LocalDate purchaseDate = null, warrantyExpiration = null;
+                    try {
+                        purchaseDate = LocalDate.parse(details[3], formatter); // Corrected index for purchase date
+                        warrantyExpiration = LocalDate.parse(details[6], formatter); // Corrected index for warranty expiration date
+                    } catch (DateTimeParseException e) {
+                        System.err.println("Error parsing dates in line: " + line);
+                        continue;
+                    }
+                    Asset asset = new Asset(
+                            details[0],    // assetName
+                            details[1],    // category
+                            details[2],    // location
+                            details[4],    // description
+                            purchaseDate,
+                            details[5],    // purchasedValue
+                            warrantyExpiration);
+                    assetList.add(asset);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Loaded " + assetList.size() + " assets");
     }
 
     @FXML
     private void setDetails(ActionEvent event) {
-        String path = "assets.csv";
-        String line = "";
-        String asset = searchComboBox.getValue();
+        Asset selectedAsset = table.getSelectionModel().getSelectedItem();
+        if (selectedAsset != null) {
+            String assetNameStr = selectedAsset.getAssetName();
+            String categoryStr = selectedAsset.getCategory();
+            String locationStr = selectedAsset.getLocation();
+            String purchaseDateStr = selectedAsset.getPurchaseDate().toString();
+            String descriptionStr = selectedAsset.getDescription();
+            String purchasedValueStr = selectedAsset.getPurchasedValue();
+            String warrantyExpirationStr = selectedAsset.getWarrantyExpiration().toString();
 
-        assetName.clear();
-        categoryChoiceBox.setValue(null);
-        locationChoiceBox.setValue(null);
-        description.clear();
-        purchasedValue.clear();
-        purchaseDate.setValue(null);
-        warrantyExpiration.setValue(null);
+            searchAsset.setText(assetNameStr);
+            assetName.setText(assetNameStr);
+            categoryChoiceBox.setValue(categoryStr);
+            locationChoiceBox.setValue(locationStr);
+            description.setText(descriptionStr);
+            purchasedValue.setText(purchasedValueStr);
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            String name = "";
-            String category = "";
-            String location = "";
-            String purchaseDateStr = "";
-            String descript = "";
-            String purchaseValue = "";
-            String expiration = "";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(purchaseDateStr, formatter);
+            LocalDate warrantyDate = LocalDate.parse(warrantyExpirationStr, formatter);
 
-            if (asset == null || asset.isEmpty()){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("No assets to search from.");
-                alert.showAndWait();
-            }
-            while ((line = br.readLine()) != null){
-                String[] details = line.split(",");
-                if (details.length > 0 && details[0].equalsIgnoreCase(asset)) {
-                    name = !details[0].isEmpty() ? details[0] : "";
-                    category = details.length > 1 && !details[1].isEmpty() ? details[1] : "";
-                    location = details.length > 2 && !details[2].isEmpty() ? details[2] : "";
-                    purchaseDateStr = details.length > 3 && !details[3].isEmpty() ? details[3] : "";
-                    descript = details.length > 4 && !details[4].isEmpty() ? details[4] : "";
-                    purchaseValue = details.length > 5 && !details[5].isEmpty() ? details[5] : "";
-                    expiration = details.length > 6 && !details[6].isEmpty() ? details[6] : "";
-                    break;
-                }
-            }
-
-            LocalDate parsedPurchaseDate = null;
-            if (!purchaseDateStr.isEmpty() && !purchaseDateStr.equals("000")) {
-                parsedPurchaseDate = LocalDate.parse(purchaseDateStr);
-            }
-
-            LocalDate parsedExpirationDate = null;
-            if (!expiration.isEmpty() && !expiration.equals("000")) {
-                parsedExpirationDate = LocalDate.parse(expiration);
-            }
-
-            assetName.setText(name);
-            categoryChoiceBox.setValue(category);
-            locationChoiceBox.setValue(location);
-            description.setText(descript);
-            purchaseDate.setValue(parsedPurchaseDate);
-            purchasedValue.setText(purchaseValue);
-            warrantyExpiration.setValue(parsedExpirationDate);
-        } catch (Exception e) {
-            e.printStackTrace();
+            purchaseDate.setValue(date);
+            warrantyExpiration.setValue(warrantyDate);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select an asset from the table.");
+            alert.showAndWait();
         }
     }
+
+    @FXML
+    private void searchAsset(ActionEvent event) {
+        String searchTerm = searchAsset.getText().toLowerCase().trim();
+
+        // Create a filtered list based on the search term
+        FilteredList<Asset> filteredList = assetList.filtered(asset ->
+                asset.getAssetName().toLowerCase().contains(searchTerm)
+        );
+
+        // Update the table view with the filtered list
+        table.setItems(filteredList);
+    }
+
 
     private void assetNameFromCSV(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -163,7 +213,7 @@ public class SearchAssetController implements Initializable {
             e.printStackTrace();
         }
     }
-
+//
     private void locationsFromCSV(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -179,7 +229,7 @@ public class SearchAssetController implements Initializable {
     @FXML
     private void saveEdit(ActionEvent event) {
         String newName = assetName.getText();
-        String oldName = searchComboBox.getValue(); // Assumes that the combo box displays the current (old) asset name before editing
+        String oldName = searchAsset.getText(); // Assumes that the combo box displays the current (old) asset name before editing
         String category = categoryChoiceBox.getValue();
         String location = locationChoiceBox.getValue();
         LocalDate purchaseDate = this.purchaseDate.getValue();
@@ -236,11 +286,10 @@ public class SearchAssetController implements Initializable {
         }
     }
 
-    
-    
     @FXML
     private void deleteAsset(ActionEvent event) {
         String assetToDelete = assetName.getText(); // Get the name of the asset to delete from the text field
+        searchAsset.setText(null);
 
         if (assetToDelete.isEmpty()) {
             showAlert("Error", "Asset name is empty! Please enter an asset name to delete.");
@@ -280,14 +329,14 @@ public class SearchAssetController implements Initializable {
                 clearFormFields(); // Clear all form fields
                 refreshAssetList(); // Refresh the list of assets in the ComboBox
             } else {
-                showAlert("Error", "Asset not found. Please check the asset name and try again.");
+                showAlert("Error", "Asset not found. Please choose an asset and try again.");
             }
         } catch (IOException e) {
             showAlert("Error", "An error occurred while attempting to delete the asset.");
             e.printStackTrace();
         }
     }
-    
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -306,13 +355,11 @@ public class SearchAssetController implements Initializable {
         warrantyExpiration.setValue(null); // Reset the warranty expiration date picker
     }
 
-    
+
     private void refreshAssetList() throws IOException {
-        assets.clear();
-        assetNameFromCSV("assets.csv");
-        searchComboBox.setItems(FXCollections.observableArrayList(assets));
-        searchComboBox.setValue(null); // Optionally set to the new name if preferred
-        clearFormFields(); // Clear the form fields after update
+        assetList.clear(); // Clear the current list of assets
+        loadAssetsFromCSV("assets.csv"); // Reload assets from CSV
+        table.setItems(assetList); // Update the TableView with the updated list of assets
     }
 
     @FXML
