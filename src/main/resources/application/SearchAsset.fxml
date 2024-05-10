@@ -26,7 +26,7 @@
       </Label>
       <VBox prefHeight="291.0" prefWidth="600.0">
          <children>
-            <HBox prefHeight="79.0" prefWidth="1092.0" spacing="10.0">
+            <HBox prefHeight="76.0" prefWidth="1047.0" spacing="10.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Assset:">
                      <HBox.margin>
@@ -34,23 +34,27 @@
                      </HBox.margin>
                   </Text>
                   <TextField fx:id="searchAsset" />
-                  <Button mnemonicParsing="false" onAction="#searchAsset" text="Search" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Location:" wrappingWidth="47.724609375">
-                     <HBox.margin>
-                        <Insets top="3.0" />
-                     </HBox.margin>
-                  </Text>
-                  <ChoiceBox fx:id="locationSearch" prefHeight="24.0" prefWidth="150.0" />
+                  <Button mnemonicParsing="false" onAction="#searchAsset" style="-fx-background-color: #d4b483;" text="Search" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category:" wrappingWidth="54.724609375">
                      <HBox.margin>
                         <Insets top="3.0" />
                      </HBox.margin>
                   </Text>
                   <ChoiceBox fx:id="categorySearch" prefWidth="150.0" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Location:" wrappingWidth="47.724609375">
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin>
+                  </Text>
+                  <ChoiceBox fx:id="locationSearch" prefHeight="24.0" prefWidth="150.0" />
+                  <Button onAction="#refreshAsset" mnemonicParsing="false" style="-fx-background-color: #d4b483;" text="Reset" />
                </children>
                <padding>	
-                  <Insets left="220.0" top="10.0" />
+                  <Insets left="160.0" top="10.0" />
                </padding>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
             </HBox>
          </children>
          <padding>
@@ -85,12 +89,12 @@
                      <children>
                         <ButtonBar layoutX="20.0" layoutY="517.0" prefHeight="40.0" prefWidth="150.0">
                           <buttons>
-                            <Button onAction="#saveEdit" mnemonicParsing="false" style="-fx-background-color: #d4b483;" text="Save Edit">
+                            <Button mnemonicParsing="false" onAction="#saveEdit" style="-fx-background-color: #d4b483;" text="Save Edit">
                                  <font>
                                     <Font size="13.0" />
                                  </font>
                               </Button>
-                              <Button onAction="#deleteAsset" mnemonicParsing="false" style="-fx-background-color: #d4b483;" text="Delete">
+                              <Button mnemonicParsing="false" onAction="#deleteAsset" style="-fx-background-color: #d4b483;" text="Delete">
                                  <font>
                                     <Font size="13.0" />
                                  </font>

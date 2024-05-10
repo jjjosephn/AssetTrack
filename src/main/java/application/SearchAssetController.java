@@ -107,6 +107,40 @@ public class SearchAssetController implements Initializable {
             }
         });
 
+        categorySearch.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updateTableViewForCategory(newValue);
+                categorySearch.setValue(newValue);
+            }
+            locationSearch.setValue(null);
+            searchAsset.setText(null);
+        });
+
+        locationSearch.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updateTableViewForLocation(newValue);
+                locationSearch.setValue(newValue);
+            }
+            categorySearch.setValue(null);
+            searchAsset.setText(null);
+        });
+    }
+
+    private void updateTableViewForCategory(String selectedCategory) {
+        FilteredList<Asset> filteredList = assetList.filtered(asset ->
+                asset.getCategory().equalsIgnoreCase(selectedCategory)
+        );
+
+        table.setItems(filteredList);
+    }
+
+    private void updateTableViewForLocation(String selectedLocation) {
+        FilteredList<Asset> filteredList = assetList.filtered(asset ->
+                asset.getLocation().equalsIgnoreCase(selectedLocation)
+        );
+
+        table.setItems(filteredList);
+        locationSearch.setValue(selectedLocation);
     }
 
     private void loadAssetsFromCSV(String filePath) {
@@ -177,15 +211,28 @@ public class SearchAssetController implements Initializable {
 
     @FXML
     private void searchAsset(ActionEvent event) {
-        String searchTerm = searchAsset.getText().toLowerCase().trim();
+        if(searchAsset.getText() == null){
+            showAlert("Error", "No assets to search for!");
+        }
+        else {
+            String searchTerm = searchAsset.getText().toLowerCase().trim();
+            // Create a filtered list based on the search term
+            FilteredList<Asset> filteredList = assetList.filtered(asset ->
+                    asset.getAssetName().toLowerCase().contains(searchTerm)
+            );
 
-        // Create a filtered list based on the search term
-        FilteredList<Asset> filteredList = assetList.filtered(asset ->
-                asset.getAssetName().toLowerCase().contains(searchTerm)
-        );
+            // Update the table view with the filtered list
+            table.setItems(filteredList);
+            categorySearch.setValue(null);
+            locationSearch.setValue(null);
+        }
+    }
 
-        // Update the table view with the filtered list
-        table.setItems(filteredList);
+    @FXML
+    private void refreshAsset(ActionEvent event){
+        assetList.clear(); // Clear the current list of assets
+        loadAssetsFromCSV("assets.csv"); // Reload assets from CSV
+        table.setItems(assetList); // Update the TableView with the updated list of assets
     }
 
 
