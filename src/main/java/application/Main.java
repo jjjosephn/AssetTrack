@@ -16,6 +16,7 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ExpiredWarranties.fxml"));
             root = loader.load();
 
+            //run thee expired warranties controller first, if there aren't any expired warranties, then display the main page
             ExpiredWarrantiesController expiredWarrantiesController = loader.getController();
             if (expiredWarrantiesController.hasExpiredWarranties() == true) {
                 expiredWarrantiesController.showExpiredWarrantiesAlert();

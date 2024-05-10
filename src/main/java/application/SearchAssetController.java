@@ -101,12 +101,14 @@ public class SearchAssetController implements Initializable {
 
         table.setItems(assetList);
 
+        //choosing asset by clicking on the table
         table.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {
                 setDetails(null);
             }
         });
 
+        //choosing a category on the search menu
         categorySearch.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateTableViewForCategory(newValue);
@@ -116,6 +118,7 @@ public class SearchAssetController implements Initializable {
             searchAsset.setText(null);
         });
 
+        //choosing a location on the search menu
         locationSearch.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateTableViewForLocation(newValue);
@@ -126,6 +129,7 @@ public class SearchAssetController implements Initializable {
         });
     }
 
+    //updating table after choosing a category from the search menu
     private void updateTableViewForCategory(String selectedCategory) {
         FilteredList<Asset> filteredList = assetList.filtered(asset ->
                 asset.getCategory().equalsIgnoreCase(selectedCategory)
@@ -134,6 +138,7 @@ public class SearchAssetController implements Initializable {
         table.setItems(filteredList);
     }
 
+    //updating table after choosing a location from the search menu
     private void updateTableViewForLocation(String selectedLocation) {
         FilteredList<Asset> filteredList = assetList.filtered(asset ->
                 asset.getLocation().equalsIgnoreCase(selectedLocation)
@@ -175,6 +180,7 @@ public class SearchAssetController implements Initializable {
         System.out.println("Loaded " + assetList.size() + " assets");
     }
 
+    //Setting table info
     @FXML
     private void setDetails(ActionEvent event) {
         Asset selectedAsset = table.getSelectionModel().getSelectedItem();
@@ -209,6 +215,7 @@ public class SearchAssetController implements Initializable {
         }
     }
 
+    //clicking the search buutton
     @FXML
     private void searchAsset(ActionEvent event) {
         if(searchAsset.getText() == null){
@@ -273,10 +280,11 @@ public class SearchAssetController implements Initializable {
         }
     }
 
+    //save edit button
     @FXML
     private void saveEdit(ActionEvent event) {
         String newName = assetName.getText();
-        String oldName = searchAsset.getText(); // Assumes that the combo box displays the current (old) asset name before editing
+        String oldName = searchAsset.getText(); // Assumes that the search asset text field displays the current (old) asset name before editing
         String category = categoryChoiceBox.getValue();
         String location = locationChoiceBox.getValue();
         LocalDate purchaseDate = this.purchaseDate.getValue();
@@ -333,6 +341,7 @@ public class SearchAssetController implements Initializable {
         }
     }
 
+    //delete asset button
     @FXML
     private void deleteAsset(ActionEvent event) {
         String assetToDelete = assetName.getText(); // Get the name of the asset to delete from the text field
@@ -368,13 +377,13 @@ public class SearchAssetController implements Initializable {
             if (assetFound) {
                 FileWriter fw = new FileWriter(file, false);
                 for (String outputLine : fileContent) {
-                    fw.write(outputLine + System.lineSeparator()); // Write each line back to the file
+                    fw.write(outputLine + System.lineSeparator());
                 }
                 fw.close();
 
                 showAlert("Success", "Asset deleted successfully!");
-                clearFormFields(); // Clear all form fields
-                refreshAssetList(); // Refresh the list of assets in the ComboBox
+                clearFormFields();
+                refreshAssetList();
             } else {
                 showAlert("Error", "Asset not found. Please choose an asset and try again.");
             }
@@ -393,20 +402,20 @@ public class SearchAssetController implements Initializable {
     }
 
     private void clearFormFields() {
-        assetName.clear(); // Clear the asset name from the text field
-        categoryChoiceBox.setValue(null); // Clear the selected category
-        locationChoiceBox.setValue(null); // Clear the selected location
-        description.clear(); // Clear the description text area
-        purchasedValue.clear(); // Clear the purchased value field
-        purchaseDate.setValue(null); // Reset the purchase date picker
-        warrantyExpiration.setValue(null); // Reset the warranty expiration date picker
+        assetName.clear();
+        categoryChoiceBox.setValue(null);
+        locationChoiceBox.setValue(null);
+        description.clear();
+        purchasedValue.clear();
+        purchaseDate.setValue(null);
+        warrantyExpiration.setValue(null);
     }
 
 
     private void refreshAssetList() throws IOException {
-        assetList.clear(); // Clear the current list of assets
-        loadAssetsFromCSV("assets.csv"); // Reload assets from CSV
-        table.setItems(assetList); // Update the TableView with the updated list of assets
+        assetList.clear();
+        loadAssetsFromCSV("assets.csv");
+        table.setItems(assetList);
     }
 
     @FXML
