@@ -7,15 +7,7 @@ An easy-to-use application designed to help you manage and organize your physica
 1. JavaFX
 
 ## How to Run this Program Locally 🖥️
-1. Download all py and txt files into one folder
-   ```cmd
-   JN_pairwise_alignment.py
-   seq1.txt
-   seq2.txt
-   ```
-2. Install biopython
-   ```cmd
-   pip3 install biopython
-   ```
-3. Run program
+1. Clone the github repo
+   ```https://github.com/jjjosephn/AssetTrack.git```
+2. Run program locally
    
