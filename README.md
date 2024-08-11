@@ -8,6 +8,8 @@ An easy-to-use application designed to help you manage and organize your physica
 
 ## How to Run this Program Locally 🖥️
 1. Clone the github repo
-   ```https://github.com/jjjosephn/AssetTrack.git```
-2. Run program locally
+   ```
+   git clone https://github.com/jjjosephn/AssetTrack.git
+   ```
+3. Run program locally
    
